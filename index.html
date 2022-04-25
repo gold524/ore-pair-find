@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <style type="text/css">
+        .item {
+            width: 150px;
+            height: 150px;
+            background-size:100% 100%;
+            background-repeat: no-repeat;
+            margin-top: 20px;
+            margin-left: 20px;
+            background-color: none;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            height: 200px;
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .active{
+            border: 3px solid green;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+    </div>
+    <h1>Score: <span class="count"></span></h1>
+    <h1>Время: <span class="time"></span></h1>
+    <script type="text/javascript">
+    //див-родитель
+    let row = document.querySelector(".row");
+
+    //хранение картинок
+    let images = ["diamond.jpg", "coal.png", "lazuli.png", "red.png", "copper.jpg", "emerald.jpg", "gold.jpg", "iron.jpg", "diamond.jpg", "coal.png", "lazuli.png", "red.png", "copper.jpg", "emerald.jpg", "gold.jpg", "iron.jpg"];
+
+    let past_div = null;
+
+    let count = 0;
+    let score = document.querySelector(".count");
+    score.innerHTML = count;
+
+    let time = 12;
+    let time_txt = document.querySelector(".time");
+    time_txt.innerHTML = time;
+
+    function countdown(){
+        time -= 1;
+        time_txt.innerHTML = time;
+        if (time == 0){
+            clearInterval(int1)
+            alert('проиграл')
+        }
+        return time;
+    }
+
+    int1 = setInterval(countdown, 1000);
+
+    function end(){
+        clearInterval(int1)
+        time_txt.innerHTML = time;
+    }
+
+    function getRandom(arg){
+        let a = Math.random() * arg;
+        let b = Math.round(a);
+        return b;
+    }
+
+    for (let i=0; i<16; i=i+1){
+        let elem = document.createElement("div");
+        row.appendChild(elem);
+        elem.classList.add("item");
+        let index = getRandom(images.length-1);
+        elem.style.backgroundImage = "url(" + images[index] + ")";
+        elem.me = images[index]
+
+        images.splice(index, 1)
+
+        elem.onclick = function(){
+            elem.classList.add("active");
+            if (past_div == null){
+                past_div = elem;
+            }else if (past_div.me == elem.me){
+                past_div.style.opacity = 0;
+                elem.style.opacity = 0;
+                past_div = null;
+                count += 1;
+                score.innerHTML = count;
+                if (count == 8){
+                    alert('выиграл');
+                    setTimeout(end, 1000);
+                }
+            }else if(past_div.me != elem.me){
+                elem.classList.remove("active");
+                past_div.classList.remove("active");
+                past_div = null;
+            }
+        }
+    }
+    </script>
+</body>
+</html>
